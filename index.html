@@ -1,0 +1,586 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TAM · SAM · SOM — Sizing Your Market</title>
+<meta name="description" content="An interactive guide to TAM, SAM, and SOM for entrepreneurship students, with market-size calculators, a reality check, and a quiz.">
+<style>
+:root{
+  --bg:#f7f6f2; --surface:#ffffff; --surface-2:#f0eee8; --ink:#1d1f24; --muted:#5d6370; --line:#dedbd2;
+  --tam:#3557c9; --tam-soft:#dfe6fb; --sam:#0e8f80; --sam-soft:#d6f1ec; --som:#e0662b; --som-soft:#fde3d4;
+  --good:#1f8a4c; --warn:#b7791f; --bad:#c0392b; --focus:#3557c9;
+  --radius:14px; --shadow:0 1px 2px rgba(0,0,0,.05),0 4px 16px rgba(0,0,0,.05);
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#14161a; --surface:#1d2026; --surface-2:#252930; --ink:#eceef2; --muted:#a2a9b6; --line:#323741;
+    --tam:#7f9bff; --tam-soft:#26305a; --sam:#3fc9b6; --sam-soft:#163f3a; --som:#ff9a62; --som-soft:#4a2a1a;
+    --good:#4fcf86; --warn:#e6b450; --bad:#ff7a6b; --focus:#7f9bff; --shadow:none;
+  }
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+a{color:var(--tam)}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+header.top{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+header.top .wrap{display:flex;align-items:center;gap:20px;height:56px;overflow-x:auto}
+.brand{font-weight:800;white-space:nowrap;letter-spacing:-.01em}
+.brand span{color:var(--tam)}.brand span+span{color:var(--sam)}.brand span+span+span{color:var(--som)}
+nav{display:flex;gap:16px;font-size:14px;white-space:nowrap}
+nav a{color:var(--muted);text-decoration:none}nav a:hover{color:var(--ink)}
+section{padding:56px 0;border-bottom:1px solid var(--line)}
+h1{font-size:clamp(32px,5vw,52px);line-height:1.1;letter-spacing:-.02em;margin:0 0 16px}
+h2{font-size:clamp(24px,3.4vw,34px);letter-spacing:-.015em;margin:0 0 8px;line-height:1.2}
+h3{font-size:19px;margin:0 0 6px}
+.eyebrow{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:8px}
+.lead{font-size:19px;color:var(--muted);max-width:680px}
+.sub{color:var(--muted);max-width:720px;margin:0 0 28px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow)}
+.grid{display:grid;gap:18px}
+.g3{grid-template-columns:repeat(3,1fr)}.g2{grid-template-columns:1fr 1fr}
+@media (max-width:820px){.g3,.g2{grid-template-columns:1fr}}
+.hero{display:grid;grid-template-columns:1.15fr .85fr;gap:32px;align-items:center}
+@media (max-width:820px){.hero{grid-template-columns:1fr}}
+.pill{display:inline-block;font-weight:800;font-size:13px;padding:3px 10px;border-radius:999px;letter-spacing:.04em}
+.p-tam{background:var(--tam-soft);color:var(--tam)}.p-sam{background:var(--sam-soft);color:var(--sam)}.p-som{background:var(--som-soft);color:var(--som)}
+.def{border-top:5px solid}.def.tam{border-color:var(--tam)}.def.sam{border-color:var(--sam)}.def.som{border-color:var(--som)}
+.def .q{font-style:italic;color:var(--muted);margin:8px 0 10px}
+.def ul{margin:8px 0 0;padding-left:18px;color:var(--muted);font-size:15px}
+.analogy{margin-top:22px;background:var(--surface-2);border-radius:var(--radius);padding:18px 22px}
+/* calculator */
+.calc{display:grid;grid-template-columns:1.05fr .95fr;gap:22px;align-items:start}
+.calc>*,.grid>*,.hero>*,.big>*{min-width:0}
+@media (max-width:520px){.big .v{font-size:17px}.big div{padding:8px}}
+@media (max-width:900px){.calc{grid-template-columns:1fr}}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+label{font-size:14px;font-weight:600;display:block;margin-bottom:4px}
+.hint{font-size:13px;color:var(--muted);font-weight:400}
+input[type=number],input[type=text],select{width:100%;font:inherit;font-size:15px;padding:9px 11px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink)}
+input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+input[type=range]{width:100%;accent-color:var(--som)}
+.step{border-left:4px solid;padding:4px 0 4px 16px;margin:18px 0}
+.step.tam{border-color:var(--tam)}.step.sam{border-color:var(--sam)}.step.som{border-color:var(--som)}
+.step h4{margin:0 0 10px;font-size:15px;display:flex;align-items:center;gap:8px}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:520px){.fields{grid-template-columns:1fr}}
+.filter{display:grid;grid-template-columns:1fr 110px;gap:8px;margin-bottom:8px}
+.seg{display:inline-flex;background:var(--surface-2);border-radius:10px;padding:3px;gap:3px}
+.seg button{border:0;background:transparent;color:var(--muted);font:inherit;font-size:14px;font-weight:600;padding:7px 12px;border-radius:8px;cursor:pointer}
+.seg button.on{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.btn{border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;font-size:14px;font-weight:600;padding:8px 14px;border-radius:10px;cursor:pointer}
+.btn:hover{background:var(--surface-2)}
+.btn.primary{background:var(--tam);border-color:var(--tam);color:#fff}
+.results{position:sticky;top:76px}
+.big{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:6px}
+.big div{border-radius:12px;padding:10px 12px}
+.big .v{font-size:22px;font-weight:800;letter-spacing:-.01em;font-variant-numeric:tabular-nums}
+.big .l{font-size:12px;font-weight:700;letter-spacing:.06em}
+.big .c{font-size:12px;color:var(--muted)}
+.b-tam{background:var(--tam-soft)}.b-tam .v,.b-tam .l{color:var(--tam)}
+.b-sam{background:var(--sam-soft)}.b-sam .v,.b-sam .l{color:var(--sam)}
+.b-som{background:var(--som-soft)}.b-som .v,.b-som .l{color:var(--som)}
+svg text{font-family:inherit}
+.math{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;background:var(--surface-2);border-radius:10px;padding:12px 14px;line-height:1.75;overflow-wrap:anywhere}
+.math b.t{color:var(--tam)}.math b.s{color:var(--sam)}.math b.o{color:var(--som)}
+.note{font-size:13px;color:var(--muted)}
+.summary{background:var(--surface-2);border-radius:10px;padding:12px 14px;font-size:14px;margin:10px 0}
+/* reality */
+.bars{margin-top:14px}
+.bar{margin:10px 0}
+.bar .track{height:26px;background:var(--surface-2);border-radius:8px;overflow:hidden}
+.bar .fill{height:100%;border-radius:8px;transition:width .35s ease}
+.bar .lbl{display:flex;justify-content:space-between;font-size:14px;margin-bottom:4px}
+.verdict{margin-top:14px;padding:14px 16px;border-radius:12px;font-weight:600}
+.v-good{background:color-mix(in srgb,var(--good) 15%,transparent);color:var(--good)}
+.v-warn{background:color-mix(in srgb,var(--warn) 18%,transparent);color:var(--warn)}
+.v-bad{background:color-mix(in srgb,var(--bad) 15%,transparent);color:var(--bad)}
+/* compare table */
+table{width:100%;border-collapse:collapse;font-size:15px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.tablewrap{overflow-x:auto}
+/* quiz */
+.quiz{display:grid;gap:14px}
+.qc .ctx{font-size:13px;color:var(--muted);margin-bottom:4px}
+.qc .stmt{font-weight:600;margin-bottom:12px}
+.qc .opts{display:flex;gap:8px;flex-wrap:wrap}
+.qc .opts button{min-width:76px}
+.qc .opts button.right{background:var(--good);border-color:var(--good);color:#fff}
+.qc .opts button.wrong{background:var(--bad);border-color:var(--bad);color:#fff}
+.qc .fb{margin-top:10px;font-size:14px;color:var(--muted);display:none}
+.qc.done .fb{display:block}
+.score{font-weight:700}
+/* mistakes */
+details{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin-bottom:10px}
+summary{cursor:pointer;font-weight:700}
+details p{color:var(--muted);margin:10px 0 0}
+footer{padding:36px 0 60px;color:var(--muted);font-size:14px}
+@media print{header.top,nav,.no-print{display:none}section{padding:20px 0}.results{position:static}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="brand"><span>TAM</span> · <span>SAM</span> · <span>SOM</span></div>
+    <nav>
+      <a href="#idea">The idea</a>
+      <a href="#calculator">Calculator</a>
+      <a href="#methods">Top-down vs bottom-up</a>
+      <a href="#reality">Reality check</a>
+      <a href="#quiz">Quiz</a>
+      <a href="#mistakes">Mistakes</a>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<section style="padding-top:48px">
+  <div class="wrap hero">
+    <div>
+      <div class="eyebrow">Entrepreneurship · Market sizing</div>
+      <h1>How big is your opportunity, really?</h1>
+      <p class="lead">Every founder eventually gets asked, <em>"How big is this market?"</em> TAM, SAM, and SOM are three nested numbers that answer that question honestly — from the whole universe of demand down to the slice you can realistically win.</p>
+      <p class="row" style="margin-top:22px">
+        <a class="btn primary" href="#calculator" style="text-decoration:none">Try the calculator →</a>
+        <a class="btn" href="#quiz" style="text-decoration:none">Test yourself</a>
+      </p>
+    </div>
+    <svg viewBox="0 0 360 300" role="img" aria-label="Three nested circles: TAM largest, SAM inside it, SOM smallest">
+      <circle cx="180" cy="152" r="140" fill="var(--tam-soft)" stroke="var(--tam)" stroke-width="2"/>
+      <circle cx="180" cy="196" r="94" fill="var(--sam-soft)" stroke="var(--sam)" stroke-width="2"/>
+      <circle cx="180" cy="238" r="48" fill="var(--som-soft)" stroke="var(--som)" stroke-width="2"/>
+      <text x="180" y="44" text-anchor="middle" font-weight="800" font-size="18" fill="var(--tam)">TAM</text>
+      <text x="180" y="62" text-anchor="middle" font-size="12" fill="var(--muted)">Everyone who could use it</text>
+      <text x="180" y="130" text-anchor="middle" font-weight="800" font-size="18" fill="var(--sam)">SAM</text>
+      <text x="180" y="148" text-anchor="middle" font-size="12" fill="var(--muted)">Who you can actually serve</text>
+      <text x="180" y="236" text-anchor="middle" font-weight="800" font-size="18" fill="var(--som)">SOM</text>
+      <text x="180" y="253" text-anchor="middle" font-size="12" fill="var(--muted)">What you'll win</text>
+    </svg>
+  </div>
+</section>
+
+<!-- THE IDEA -->
+<section id="idea">
+  <div class="wrap">
+    <div class="eyebrow">Part 1</div>
+    <h2>Three circles, three questions</h2>
+    <p class="sub">Each circle sits inside the one before it. You move inward by applying honest filters: <em>Can we reach them? Does our product fit them? Can we actually win them?</em></p>
+    <div class="grid g3">
+      <div class="card def tam">
+        <span class="pill p-tam">TAM</span>
+        <h3 style="margin-top:10px">Total Addressable Market</h3>
+        <div class="q">"If every possible customer bought, how much would they spend per year?"</div>
+        <p>The total annual demand for the <strong>problem you solve</strong> — ignoring competition, geography, and your limits.</p>
+        <ul><li>Shows the ceiling of the opportunity</li><li>Usually a big, abstract number</li></ul>
+      </div>
+      <div class="card def sam">
+        <span class="pill p-sam">SAM</span>
+        <h3 style="margin-top:10px">Serviceable Available Market</h3>
+        <div class="q">"Which part of that can our business model actually serve?"</div>
+        <p>The slice of TAM that fits your <strong>product, location, channel, and price point</strong>.</p>
+        <ul><li>Filters: geography, customer type, language, regulation, price</li><li>Your "home field"</li></ul>
+      </div>
+      <div class="card def som">
+        <span class="pill p-som">SOM</span>
+        <h3 style="margin-top:10px">Serviceable Obtainable Market</h3>
+        <div class="q">"How much of the SAM can we realistically capture in 3–5 years?"</div>
+        <p>Your realistic share given <strong>competitors, budget, team, and time</strong>.</p>
+        <ul><li>Should be backed by a sales/marketing plan</li><li>This is what goes in your revenue forecast</li></ul>
+      </div>
+    </div>
+    <div class="analogy">
+      <strong>Analogy — opening a pizza shop:</strong> TAM is all the money Americans spend on pizza each year. SAM is what people within delivery range of your shop spend on pizza. SOM is the share of those local pizza dollars you can realistically pull away from Domino's, the place down the street, and frozen pizza — given one oven, two drivers, and your marketing budget.
+    </div>
+  </div>
+</section>
+
+<!-- CALCULATOR -->
+<section id="calculator">
+  <div class="wrap">
+    <div class="eyebrow">Part 2</div>
+    <h2>Market Size Calculator</h2>
+    <p class="sub">Pick an example or choose <strong>My own idea</strong>. Change any number and watch the circles and dollars update. Example figures are illustrative — verify real numbers before using them in a pitch.</p>
+
+    <div class="calc">
+      <div class="card">
+        <div class="fields">
+          <div>
+            <label for="preset">Start from an example</label>
+            <select id="preset">
+              <option value="coffee">Campus coffee cart</option>
+              <option value="pets">Fresh dog-food subscription</option>
+              <option value="dental">Scheduling software for dentists</option>
+              <option value="custom">My own idea</option>
+            </select>
+          </div>
+          <div>
+            <label>How will you calculate TAM?</label>
+            <div class="seg" role="tablist">
+              <button type="button" id="mBottom" class="on">Bottom-up</button>
+              <button type="button" id="mTop">Top-down</button>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:12px">
+          <label for="ideaName">Business idea</label>
+          <input type="text" id="ideaName">
+        </div>
+
+        <div class="step tam">
+          <h4><span class="pill p-tam">1 · TAM</span> The whole market</h4>
+          <div id="bottomInputs" class="fields">
+            <div>
+              <label for="customers">Total potential customers <span class="hint">(people or businesses)</span></label>
+              <input type="number" id="customers" min="0" step="1">
+            </div>
+            <div>
+              <label for="custDesc">Who are they?</label>
+              <input type="text" id="custDesc">
+            </div>
+          </div>
+          <div id="topInputs" class="fields" style="display:none">
+            <div>
+              <label for="industry">Total industry revenue per year ($)</label>
+              <input type="number" id="industry" min="0" step="1000">
+            </div>
+            <div>
+              <label for="indSource">Source of that figure</label>
+              <input type="text" id="indSource" placeholder="e.g., industry report, 2025">
+            </div>
+          </div>
+          <div style="margin-top:12px">
+            <label for="spend">Average spend per customer per year ($)</label>
+            <input type="number" id="spend" min="0" step="1">
+            <div class="hint" id="spendHint">TAM = customers × annual spend</div>
+          </div>
+        </div>
+
+        <div class="step sam">
+          <h4><span class="pill p-sam">2 · SAM</span> Filters: who can you actually serve?</h4>
+          <div class="hint" style="margin-bottom:8px">Name each filter and enter the % of the previous group that passes it. Use 100% to skip a filter.</div>
+          <div class="filter"><input type="text" id="f1l" aria-label="Filter 1 name"><input type="number" id="f1" min="0" max="100" step="0.01" aria-label="Filter 1 percent"></div>
+          <div class="filter"><input type="text" id="f2l" aria-label="Filter 2 name"><input type="number" id="f2" min="0" max="100" step="0.01" aria-label="Filter 2 percent"></div>
+          <div class="filter"><input type="text" id="f3l" aria-label="Filter 3 name"><input type="number" id="f3" min="0" max="100" step="0.01" aria-label="Filter 3 percent"></div>
+        </div>
+
+        <div class="step som">
+          <h4><span class="pill p-som">3 · SOM</span> Your realistic share (in 3–5 years)</h4>
+          <label for="share">Share of SAM you can capture: <span id="shareOut" style="color:var(--som)"></span></label>
+          <input type="range" id="share" min="0" max="40" step="0.5">
+          <div class="hint">Rule of thumb: new ventures rarely capture more than 1–10% of a competitive SAM in their first few years. Higher is possible in small, underserved niches.</div>
+        </div>
+      </div>
+
+      <div class="card results">
+        <svg id="circles" viewBox="0 0 400 300" role="img" aria-label="Nested circles sized to your TAM, SAM, and SOM"></svg>
+        <div class="note" id="scaleNote" style="text-align:center;min-height:20px"></div>
+        <div class="big">
+          <div class="b-tam"><div class="l">TAM</div><div class="v" id="oTam"></div><div class="c" id="cTam"></div></div>
+          <div class="b-sam"><div class="l">SAM</div><div class="v" id="oSam"></div><div class="c" id="cSam"></div></div>
+          <div class="b-som"><div class="l">SOM</div><div class="v" id="oSom"></div><div class="c" id="cSom"></div></div>
+        </div>
+        <h3 style="margin-top:18px;font-size:15px">Show the math</h3>
+        <div class="math" id="math"></div>
+        <h3 style="margin-top:18px;font-size:15px">Your one-sentence pitch</h3>
+        <div class="summary" id="summary"></div>
+        <div class="row no-print">
+          <button class="btn" id="copyBtn" type="button">Copy summary</button>
+          <button class="btn" type="button" onclick="window.print()">Print this page</button>
+          <span class="note" id="copied"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- METHODS -->
+<section id="methods">
+  <div class="wrap">
+    <div class="eyebrow">Part 3</div>
+    <h2>Top-down vs. bottom-up</h2>
+    <p class="sub">There are two ways to get to TAM. Investors trust bottom-up more, because it's built from things you can actually verify — real customers and real prices. The best pitches do both and show they land in the same neighborhood.</p>
+    <div class="tablewrap card" style="padding:6px 10px">
+      <table>
+        <thead><tr><th></th><th>Top-down</th><th>Bottom-up</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Starts with</strong></td><td>A big industry number from a report ("U.S. coffee is a $XX billion market")</td><td>Countable customers × what each one pays per year</td></tr>
+          <tr><td><strong>Then</strong></td><td>Narrows down with percentages</td><td>Builds up from units you can test (one customer, one sale)</td></tr>
+          <tr><td><strong>Strength</strong></td><td>Fast; good for a first gut check</td><td>Credible; ties directly to your pricing and sales plan</td></tr>
+          <tr><td><strong>Weakness</strong></td><td>Easy to fool yourself — "if we just get 1%…"</td><td>Takes more research; assumptions must be defended</td></tr>
+          <tr><td><strong>Use it to</strong></td><td>Sanity-check scale</td><td>Build your forecast and SOM</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note" style="margin-top:14px"><strong>Try it:</strong> In the calculator, switch between Bottom-up and Top-down for the same idea. Does the industry-report number line up with customers × spend? If not, which assumption is off?</p>
+    <p class="note"><strong>Lean Canvas tie-in:</strong> Your TAM/SAM/SOM should come straight from your <em>Customer Segments</em> box (who) and your <em>Revenue Streams</em> box (how much they pay). If your SAM filters don't match the segment you described, one of them needs to change.</p>
+  </div>
+</section>
+
+<!-- REALITY CHECK -->
+<section id="reality">
+  <div class="wrap">
+    <div class="eyebrow">Part 4</div>
+    <h2>Reality check: can you actually win your SOM?</h2>
+    <p class="sub">A SOM is only believable if you can show <em>how</em> you'd get those customers. Compare the customers your SOM requires against how many your sales and marketing engine can realistically win.</p>
+    <div class="grid g2">
+      <div class="card">
+        <div class="fields">
+          <div>
+            <label for="years">Years to reach SOM</label>
+            <input type="number" id="years" min="1" max="10" step="1" value="3">
+          </div>
+          <div>
+            <label for="perMonth">New customers you can win per month</label>
+            <input type="number" id="perMonth" min="0" step="1">
+          </div>
+        </div>
+        <div style="margin-top:12px">
+          <label for="churn">Customers lost each year (churn) <span class="hint">%</span></label>
+          <input type="number" id="churn" min="0" max="100" step="1" value="10">
+        </div>
+        <p class="note" style="margin-top:12px">Think about where "per month" comes from: How many sales calls, flyers, ads, or events? What % convert? E.g., 400 people see your cart daily × 2% become regulars ≈ 8 new regulars a day at launch, but that slows once you've reached most of campus.</p>
+      </div>
+      <div class="card">
+        <div class="bars">
+          <div class="bar">
+            <div class="lbl"><span>Customers your SOM requires</span><strong id="needN"></strong></div>
+            <div class="track"><div class="fill" id="needBar" style="background:var(--som)"></div></div>
+          </div>
+          <div class="bar">
+            <div class="lbl"><span>Customers your plan can deliver</span><strong id="canN"></strong></div>
+            <div class="track"><div class="fill" id="canBar" style="background:var(--sam)"></div></div>
+          </div>
+        </div>
+        <div class="verdict" id="verdict"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- QUIZ -->
+<section id="quiz">
+  <div class="wrap">
+    <div class="eyebrow">Part 5</div>
+    <h2>Sort it out: TAM, SAM, or SOM?</h2>
+    <p class="sub">Read each statement and decide which circle it describes. <span class="score" id="score">Score: 0 / 0</span> <button class="btn no-print" id="resetQuiz" type="button" style="margin-left:8px">Reset</button></p>
+    <div class="quiz" id="quizList"></div>
+  </div>
+</section>
+
+<!-- MISTAKES -->
+<section id="mistakes">
+  <div class="wrap">
+    <div class="eyebrow">Part 6</div>
+    <h2>Common mistakes (that investors spot instantly)</h2>
+    <p class="sub">Click each one to see why it hurts your credibility.</p>
+    <details><summary>The "1% of China" trap</summary><p>"There are 1.4 billion people in China — if we get just 1%, we're rich!" This skips SAM and SOM entirely and offers no reason anyone would buy. A small, well-defended SOM beats a huge, hand-wavy one every time.</p></details>
+    <details><summary>Counting people you can't reach</summary><p>If you only sell in Sacramento, U.S.-wide customers belong in TAM, not SAM. Your SAM must reflect your real geography, channels, language, and price point today.</p></details>
+    <details><summary>Defining the market by your product instead of the problem</summary><p>"The market for AI-powered dog-walking apps" is tiny or doesn't exist yet. Define TAM by the need: what people spend on getting their dogs walked, however they solve it today.</p></details>
+    <details><summary>A SOM with no plan behind it</summary><p>Picking 10% because it "sounds reasonable" isn't analysis. Your SOM should connect to a go-to-market plan: channels, conversion rates, sales capacity, and budget (see the Reality Check above).</p></details>
+    <details><summary>Mixing up units or time frames</summary><p>Market size is usually <em>revenue per year</em>. Don't mix annual spend with lifetime value, or count customers in one circle and dollars in another.</p></details>
+    <details><summary>Inflating TAM to look impressive</summary><p>A giant TAM doesn't make a weak idea strong. Investors care that the market is big enough to matter <em>and</em> that you understand exactly which slice you're going after first.</p></details>
+    <details><summary>Using stale or unrelated data</summary><p>A 2015 report on "the food industry" doesn't size a 2026 vegan meal-kit business. Cite recent, specific sources — and triangulate with a bottom-up estimate.</p></details>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    Built for entrepreneurship students at Jessup University. Example numbers are illustrative only — always research and cite your own data.
+  </div>
+</footer>
+
+<script>
+(function(){
+  const $ = id => document.getElementById(id);
+
+  const presets = {
+    coffee: {idea:'Campus coffee cart', customers:19000000, desc:'U.S. college students', spend:600,
+      industry:45000000000, src:'U.S. coffee shop industry estimate',
+      f1l:'Students on our campus', f1:0.02, f2l:'Drink coffee regularly', f2:65, f3l:'Pass our cart daily', f3:60,
+      share:25, perMonth:20},
+    pets: {idea:'Fresh dog-food subscription', customers:65000000, desc:'U.S. dog-owning households', spend:900,
+      industry:60000000000, src:'U.S. dog food market estimate',
+      f1l:'In our delivery area (Northern CA)', f1:5, f2l:'Willing to pay premium prices', f2:15, f3l:'Comfortable buying online', f3:80,
+      share:2, perMonth:300},
+    dental: {idea:'Scheduling software for dental offices', customers:135000, desc:'U.S. dental practices', spend:3600,
+      industry:1500000000, src:'Dental practice software estimate',
+      f1l:'Independent (not big chains)', f1:70, f2l:'Using our compatible records system', f2:40, f3l:'Unhappy with current tool', f3:50,
+      share:5, perMonth:12},
+    custom: {idea:'', customers:10000, desc:'', spend:100, industry:1000000, src:'',
+      f1l:'Filter 1 (e.g., geography)', f1:100, f2l:'Filter 2 (e.g., customer type)', f2:100, f3l:'Filter 3 (e.g., price fit)', f3:100,
+      share:5, perMonth:15}
+  };
+
+  let mode = 'bottom';
+
+  function money(n){
+    if(!isFinite(n)) return '$0';
+    const a = Math.abs(n);
+    if(a >= 1e12) return '$' + (n/1e12).toFixed(1).replace(/\.0$/,'') + 'T';
+    if(a >= 1e9)  return '$' + (n/1e9).toFixed(1).replace(/\.0$/,'') + 'B';
+    if(a >= 1e6)  return '$' + (n/1e6).toFixed(1).replace(/\.0$/,'') + 'M';
+    if(a >= 1e4)  return '$' + Math.round(n/1e3) + 'K';
+    return '$' + Math.round(n).toLocaleString();
+  }
+  const num = n => Math.round(n).toLocaleString();
+  const pct = n => (n >= 10 || n === Math.round(n)) ? (+n.toFixed(1)) + '%' : (+n.toPrecision(2)) + '%';
+  const val = id => { const v = parseFloat($(id).value); return isFinite(v) && v >= 0 ? v : 0; };
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+  function loadPreset(key){
+    const p = presets[key];
+    $('ideaName').value = p.idea; $('customers').value = p.customers; $('custDesc').value = p.desc;
+    $('spend').value = p.spend; $('industry').value = p.industry; $('indSource').value = p.src;
+    ['f1','f2','f3'].forEach(f => { $(f).value = p[f]; $(f+'l').value = p[f+'l']; });
+    $('share').value = p.share; $('perMonth').value = p.perMonth;
+    update();
+  }
+
+  function setMode(m){
+    mode = m;
+    $('mBottom').classList.toggle('on', m==='bottom');
+    $('mTop').classList.toggle('on', m==='top');
+    $('bottomInputs').style.display = m==='bottom' ? '' : 'none';
+    $('topInputs').style.display = m==='top' ? '' : 'none';
+    $('spendHint').textContent = m==='bottom' ? 'TAM = customers × annual spend' : 'Used to convert dollars back into number of customers';
+    update();
+  }
+
+  function calc(){
+    const spend = val('spend');
+    const tam = mode==='bottom' ? val('customers') * spend : val('industry');
+    const filters = ['f1','f2','f3'].map(f => ({label: $(f+'l').value || 'Filter', p: Math.min(100, val(f))}));
+    const factor = filters.reduce((a,f) => a * f.p/100, 1);
+    const sam = tam * factor;
+    const share = val('share');
+    const som = sam * share/100;
+    const cust = x => spend > 0 ? x/spend : 0;
+    return {spend, tam, sam, som, filters, factor, share, tamC:cust(tam), samC:cust(sam), somC:cust(som)};
+  }
+
+  function drawCircles(r){
+    const svg = $('circles');
+    const R = 135, base = 292, cx = 200;
+    let rs = r.tam > 0 ? R*Math.sqrt(r.sam/r.tam) : 0;
+    let ro = r.tam > 0 ? R*Math.sqrt(r.som/r.tam) : 0;
+    let clamped = false;
+    if(r.sam > 0 && rs < 34){ rs = 34; clamped = true; }
+    if(r.som > 0 && ro < 14){ ro = 14; clamped = true; }
+    if(ro > rs - 2 && r.som < r.sam) ro = Math.max(6, rs - 6);
+    const c = (rad, col, soft) => rad>0 ? `<circle cx="${cx}" cy="${base-rad}" r="${rad}" fill="${soft}" stroke="${col}" stroke-width="2" style="transition:all .3s"/>` : '';
+    let labels = `<text x="${cx}" y="${base-2*R+26}" text-anchor="middle" font-weight="800" font-size="15" fill="var(--tam)">TAM ${money(r.tam)}</text>`;
+    if(rs > 0){
+      const ySam = base - 2*rs + (rs > 60 ? 24 : -8);
+      labels += `<text x="${cx}" y="${ySam}" text-anchor="middle" font-weight="800" font-size="14" fill="var(--sam)">SAM ${money(r.sam)}</text>`;
+    }
+    if(ro > 0){
+      if(ro > 30) labels += `<text x="${cx}" y="${base-ro+5}" text-anchor="middle" font-weight="800" font-size="13" fill="var(--som)">SOM ${money(r.som)}</text>`;
+      else labels += `<line x1="${cx+ro}" y1="${base-ro}" x2="${cx+ro+40}" y2="${base-ro}" stroke="var(--som)"/><text x="${cx+ro+44}" y="${base-ro+4}" font-weight="800" font-size="13" fill="var(--som)">SOM ${money(r.som)}</text>`;
+    }
+    svg.innerHTML = c(R,'var(--tam)','var(--tam-soft)') + c(rs,'var(--sam)','var(--sam-soft)') + c(ro,'var(--som)','var(--som-soft)') + labels;
+    $('scaleNote').textContent = clamped ? 'Some circles are enlarged so you can see them — the real slices are even smaller!' : 'Circle areas are drawn to scale.';
+  }
+
+  function update(){
+    const r = calc();
+    $('shareOut').textContent = pct(r.share);
+    $('oTam').textContent = money(r.tam); $('oSam').textContent = money(r.sam); $('oSom').textContent = money(r.som);
+    $('cTam').textContent = r.spend ? num(r.tamC) + ' customers' : '';
+    $('cSam').textContent = (r.spend ? num(r.samC) + ' customers · ' : '') + (r.tam ? pct(r.sam/r.tam*100) + ' of TAM' : '');
+    $('cSom').textContent = (r.spend ? num(r.somC) + ' customers · ' : '') + (r.tam ? pct(r.som/r.tam*100) + ' of TAM' : '');
+    drawCircles(r);
+
+    let m = mode==='bottom'
+      ? `<b class="t">TAM</b> = ${num(val('customers'))} ${esc($('custDesc').value || 'customers')} × $${num(r.spend)}/yr = <b class="t">${money(r.tam)}</b><br>`
+      : `<b class="t">TAM</b> = industry revenue${$('indSource').value ? ' (' + esc($('indSource').value) + ')' : ''} = <b class="t">${money(r.tam)}</b><br>`;
+    m += `<b class="s">SAM</b> = ${money(r.tam)}` + r.filters.map(f => ` × ${pct(f.p)} <span style="color:var(--muted)">(${esc(f.label)})</span>`).join('') + ` = <b class="s">${money(r.sam)}</b><br>`;
+    m += `<b class="o">SOM</b> = ${money(r.sam)} × ${pct(r.share)} share = <b class="o">${money(r.som)}</b>`;
+    if(r.spend) m += `<br><span style="color:var(--muted)">SOM customers = ${money(r.som)} ÷ $${num(r.spend)} = ${num(r.somC)}</span>`;
+    $('math').innerHTML = m;
+
+    const idea = $('ideaName').value || 'our business';
+    const seg = r.filters.filter(f => f.p < 100).map(f => f.label.toLowerCase()).join(', ');
+    $('summary').textContent =
+      `${idea} addresses a ${money(r.tam)} total market` +
+      (mode==='bottom' ? ` (${num(val('customers'))} ${$('custDesc').value || 'customers'} × $${num(r.spend)} per year)` : '') +
+      `. We can serve a ${money(r.sam)} segment${seg ? ' (' + seg + ')' : ''}, and we aim to capture ${pct(r.share)} of it — about ${money(r.som)} per year${r.spend ? ', or ' + num(r.somC) + ' customers' : ''} — within ${val('years') || 3} years.`;
+    reality(r);
+  }
+
+  function reality(r){
+    const years = Math.max(1, val('years'));
+    const churn = Math.min(100, val('churn'))/100;
+    const perYear = val('perMonth') * 12;
+    let active = 0;
+    for(let y=0; y<years; y++){ active = active*(1-churn) + perYear; }
+    const need = r.somC;
+    const max = Math.max(need, active, 1);
+    $('needN').textContent = num(need); $('canN').textContent = num(active);
+    $('needBar').style.width = (need/max*100) + '%';
+    $('canBar').style.width = (active/max*100) + '%';
+    const v = $('verdict');
+    if(!r.spend){ v.className='verdict v-warn'; v.textContent='Enter an average spend per customer so we can convert your SOM into customers.'; return; }
+    const ratio = active > 0 ? need/active : Infinity;
+    if(ratio > 1.5){ v.className='verdict v-bad'; v.textContent = `Stretch alert: your SOM needs ${ratio===Infinity?'many':ratio.toFixed(1)+'×'} more customers than your plan can win in ${years} years. Lower your share %, or explain how you'll grow sales faster.`; }
+    else if(ratio < 0.5){ v.className='verdict v-warn'; v.textContent = `Your plan could win about ${(1/ratio).toFixed(1)}× the customers your SOM needs. Either your SOM is conservative (fine!) or your customers-per-month guess is too optimistic — or you'll run out of SAM.`; }
+    else { v.className='verdict v-good'; v.textContent = `Plausible: your sales plan (${num(active)} active customers after ${years} years, after churn) roughly supports your SOM of ${num(need)} customers.`; }
+  }
+
+  // Wire up
+  $('preset').addEventListener('change', e => loadPreset(e.target.value));
+  $('mBottom').addEventListener('click', () => setMode('bottom'));
+  $('mTop').addEventListener('click', () => setMode('top'));
+  document.querySelectorAll('#calculator input, #reality input').forEach(el => el.addEventListener('input', update));
+  $('copyBtn').addEventListener('click', () => {
+    const t = $('summary').textContent;
+    const done = () => { $('copied').textContent = 'Copied!'; setTimeout(()=> $('copied').textContent='', 1800); };
+    if(navigator.clipboard) navigator.clipboard.writeText(t).then(done, () => { $('copied').textContent = 'Select the text above to copy.'; });
+  });
+
+  // Quiz
+  const quiz = [
+    {ctx:'A vegan meal-kit startup in Sacramento', s:'Americans spend about $X billion per year on meal kits.', a:'TAM', why:'This is total national spending on the need — no filters for geography or diet.'},
+    {ctx:'Same vegan meal-kit startup', s:'Vegan and vegetarian households within our Sacramento delivery zone.', a:'SAM', why:'Filtered by product fit (vegan/vegetarian) and by where you can deliver — the market you can actually serve.'},
+    {ctx:'Same vegan meal-kit startup', s:'The 1,500 subscribers we expect by year three, based on our marketing budget and a 3% conversion rate.', a:'SOM', why:'A realistic, plan-backed share of the SAM over a specific time frame.'},
+    {ctx:'A tutoring app for high-school math', s:'All money spent on K-12 tutoring in the U.S. each year.', a:'TAM', why:'The broadest version of the need (tutoring) across the whole country.'},
+    {ctx:'Same tutoring app', s:'English-speaking high-school students whose families own a smartphone and pay for tutoring.', a:'SAM', why:'Filtered to who your app (English, mobile, math, high school) can actually serve.'},
+    {ctx:'A B2B cybersecurity tool for small banks', s:'Revenue from the 40 community banks our two salespeople can close over the next 3 years.', a:'SOM', why:'Tied to sales capacity and a time frame — that\'s obtainable market.'},
+    {ctx:'A B2B cybersecurity tool for small banks', s:'Global spending on cybersecurity software.', a:'TAM', why:'Total spending on the problem, worldwide, across all customer types.'},
+    {ctx:'An electric-bike rental company in Lake Tahoe', s:'Tourists who visit Lake Tahoe in summer and rent outdoor gear.', a:'SAM', why:'Narrowed to the location and season you operate in — but not yet your realistic share.'}
+  ];
+  let answered = 0, correct = 0;
+  function renderQuiz(){
+    answered = 0; correct = 0; updateScore();
+    $('quizList').innerHTML = quiz.map((q,i) => `
+      <div class="card qc" data-i="${i}">
+        <div class="ctx">${i+1}. ${esc(q.ctx)}</div>
+        <div class="stmt">"${esc(q.s)}"</div>
+        <div class="opts">${['TAM','SAM','SOM'].map(o => `<button class="btn" type="button" data-o="${o}">${o}</button>`).join('')}</div>
+        <div class="fb"></div>
+      </div>`).join('');
+    document.querySelectorAll('.qc').forEach(card => {
+      card.querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
+        if(card.classList.contains('done')) return;
+        const q = quiz[+card.dataset.i], ok = b.dataset.o === q.a;
+        card.classList.add('done'); answered++; if(ok) correct++;
+        b.classList.add(ok ? 'right' : 'wrong');
+        if(!ok) card.querySelector(`[data-o="${q.a}"]`).classList.add('right');
+        card.querySelector('.fb').innerHTML = `<strong style="color:var(${ok?'--good':'--bad'})">${ok?'Correct!':'Not quite — it\'s ' + q.a + '.'}</strong> ${esc(q.why)}`;
+        updateScore();
+      }));
+    });
+  }
+  function updateScore(){
+    $('score').textContent = `Score: ${correct} / ${answered}` + (answered===quiz.length ? (correct===quiz.length ? ' — perfect!' : ' — review the ones you missed.') : '');
+  }
+  $('resetQuiz').addEventListener('click', renderQuiz);
+
+  loadPreset('coffee');
+  renderQuiz();
+})();
+</script>
+</body>
+</html>
